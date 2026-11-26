@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { usePublicBooking } from "@/composables/use-public-booking";
 import { peso } from "@/composables/use-format";
 import { Button, Card, ErrorText, Input } from "@/components/ui";
@@ -14,6 +14,16 @@ export default function PublicBookingPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [minStart, setMinStart] = useState<string>();
+
+  // Earliest bookable time: now, rounded up to the next 15 minutes, in the visitor's local time
+  // (datetime-local has no timezone, so build the string from local parts, not toISOString()).
+  useEffect(() => {
+    const update = () => setMinStart(nextQuarterHourLocal());
+    update();
+    const id = setInterval(update, 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   if (loading || !page) return <p className="p-10 text-stone-500">{error ?? "Loading…"}</p>;
   const accent = page.workspace.brandColor ?? "#0f766e";
@@ -48,7 +58,7 @@ export default function PublicBookingPage() {
                 {page.staff.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </label>
-            <Input label="Date & time" type="datetime-local" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} required />
+            <Input label="Date & time" type="datetime-local" min={minStart} step={900} value={startsAt} onChange={(e) => setStartsAt(e.target.value)} required />
             <Input label="Your name" value={name} onChange={(e) => setName(e.target.value)} required />
             <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input label="Phone (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -60,4 +70,12 @@ export default function PublicBookingPage() {
       {page.workspace.showClinicBranding && <p className="mt-8 text-center text-xs text-stone-400">Powered by Clinicly</p>}
     </main>
   );
+}
+
+function nextQuarterHourLocal(now = new Date()) {
+  const d = new Date(now);
+  d.setSeconds(0, 0);
+  d.setMinutes(Math.ceil((d.getMinutes() + 1) / 15) * 15);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }

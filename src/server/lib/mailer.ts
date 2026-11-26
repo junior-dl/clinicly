@@ -6,7 +6,7 @@
  */
 type Email = { to: string; subject: string; text: string; html?: string };
 
-const FROM_NAME = "Clinicly";
+const FROM_NAME = "No Reply";
 
 async function viaN8n(email: Email): Promise<boolean> {
   const url = process.env.N8N_MAIL_WEBHOOK_URL;

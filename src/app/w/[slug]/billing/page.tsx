@@ -29,6 +29,7 @@ export default function BillingPage() {
         <>
           <p className="mb-4 text-sm text-stone-600">Free covers 1 staff member and 50 bookings a month. Pro removes both limits and adds reminders, custom branding and CSV export.</p>
           <Button onClick={() => go("checkout")}>Upgrade to Pro</Button>
+          <p className="mt-4 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900">Demo checkout in Stripe test mode. Use card 4242 4242 4242 4242 with any future date and CVC. Nothing is charged.</p>
         </>
       ) : (
         <>

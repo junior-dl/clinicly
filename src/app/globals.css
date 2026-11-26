@@ -1,5 +1,26 @@
 @import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque";
 
 @theme inline {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", var(--font-geist-sans), sans-serif;
+  --color-ink: #13233a;
+  --color-teal: #0f766e;
+  --color-mint: #e7f3f0;
+  --color-marigold: #f5b301;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .slip-in {
+    animation: slip-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes slip-in {
+    from { transform: translateY(24px) rotate(-6deg); opacity: 0; }
+    to { transform: translateY(0) rotate(-2deg); opacity: 1; }
+  }
 }

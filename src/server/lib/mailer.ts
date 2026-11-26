@@ -19,5 +19,10 @@ export async function sendEmail(input: { to: string; subject: string; text: stri
       html: input.html,
     }),
   });
-  if (!res.ok) console.error("[mail] Resend failed", res.status, await res.text());
+  if (!res.ok) {
+    // Don't lose the message (e.g. Resend's sandbox only delivers to the account owner):
+    // log it so the link can still be used in development.
+    console.error("[mail] Resend failed", res.status, await res.text());
+    console.info(`[mail] Undelivered message for ${input.to}:\n${input.text}\n`);
+  }
 }

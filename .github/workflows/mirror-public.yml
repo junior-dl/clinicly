@@ -1,0 +1,20 @@
+# Mirrors main to the public repo. Work happens in the private repo only.
+name: Mirror main to public
+on:
+  push:
+    branches: [main]
+jobs:
+  mirror:
+    if: github.repository == 'junior-dl/clinicly-private'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Push main to public mirror
+        env:
+          TOKEN: ${{ secrets.PUBLIC_MIRROR_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "::error::PUBLIC_MIRROR_TOKEN secret is missing in clinicly-private"; exit 1; fi
+          git push --force "https://x-access-token:${TOKEN}@github.com/junior-dl/clinicly.git" HEAD:main

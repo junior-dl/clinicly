@@ -10,7 +10,6 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
   const { workspace, error, isManager, isOwner } = useWorkspace(slug);
 
   if (error) return <p className="p-10 text-red-700">{error}</p>;
-  if (!workspace) return <p className="p-10 text-stone-500">Loading…</p>;
 
   const nav = [
     { href: `/w/${slug}`, label: "Calendar", show: true },
@@ -25,8 +24,14 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="font-bold text-teal-800">Clinicly</Link>
           <span className="text-stone-400">/</span>
-          <span className="font-medium">{workspace.name}</span>
-          <PlanBadge plan={workspace.plan} />
+          {workspace ? (
+            <>
+              <span className="font-medium">{workspace.name}</span>
+              <PlanBadge plan={workspace.plan} />
+            </>
+          ) : (
+            <span className="h-5 w-32 animate-pulse rounded bg-stone-200" />
+          )}
         </div>
         <nav className="flex gap-1 text-sm">
           {nav.filter((n) => n.show).map((n) => (
@@ -35,7 +40,7 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
           <a href={`/book/${slug}`} target="_blank" className="rounded-md px-3 py-1.5 hover:bg-stone-200">Booking page ↗</a>
         </nav>
       </header>
-      {!isManager && <p className="mb-4 text-xs text-stone-500">You&apos;re signed in as staff — you only see your own calendar.</p>}
+      {workspace && !isManager && <p className="mb-4 text-xs text-stone-500">You&apos;re signed in as staff — you only see your own calendar.</p>}
       {children}
     </div>
   );

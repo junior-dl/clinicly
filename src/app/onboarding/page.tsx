@@ -12,14 +12,19 @@ export default function OnboardingPage() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   async function handle(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setError(null);
     try {
       const ws = await create({ name, slug });
       router.push(`/w/${ws.slug}`);
     } catch (err) {
       setError((err as Error).message);
+      setBusy(false);
     }
   }
 
@@ -31,7 +36,7 @@ export default function OnboardingPage() {
         <Input label="Booking address" value={slug} required onChange={(e) => setSlug(slugify(e.target.value))} />
         <p className="text-xs text-stone-500">{slug || "acme"}.clinicly.app</p>
         <ErrorText>{error}</ErrorText>
-        <Button className="w-full">Create workspace</Button>
+        <Button className="w-full" disabled={busy}>{busy ? "Creating…" : "Create workspace"}</Button>
       </form>
     </Card>
   );

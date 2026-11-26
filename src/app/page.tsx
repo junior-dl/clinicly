@@ -22,6 +22,10 @@ const FAQ = [
     a: "No. It's a portfolio project that shows how a multi-tenant booking app works end to end: separate workspaces, roles, plan limits and subscriptions.",
   },
   {
+    q: "Do I need to pay to try it?",
+    a: "No. The Free plan works fully: create a workspace, add services, take bookings on your public page and manage your calendar. Pro only lifts the limits and adds extras.",
+  },
+  {
     q: "What happens if I pay for Pro?",
     a: "Nothing is charged. Checkout runs in Stripe test mode, which only accepts test cards like 4242 4242 4242 4242 and declines real ones. Your workspace still switches to Pro so you can try it.",
   },
@@ -110,7 +114,7 @@ export default function Home() {
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl border border-white/15 p-8">
               <h3 className="font-display text-2xl font-bold">Free</h3>
-              <p className="mt-1 text-white/60">For a solo practitioner getting started</p>
+              <p className="mt-1 text-white/60">Fully working, free forever. No card needed.</p>
               <p className="mt-6 font-display text-5xl font-bold">₱0</p>
               <Link href="/sign-up" className="mt-8 block rounded-lg bg-white py-3 text-center font-medium text-ink hover:bg-mint">Create a free workspace</Link>
               <ul className="mt-8 space-y-3">{FREE.map((f) => <Check key={f}>{f}</Check>)}</ul>

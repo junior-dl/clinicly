@@ -1,12 +1,13 @@
 "use client";
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Button, Card, ErrorText, Input } from "./ui";
 
 export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const router = useRouter();
+  const justReset = useSearchParams().get("reset") === "1";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,10 +31,16 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   return (
     <Card className="mx-auto mt-16 max-w-sm">
       <h1 className="mb-4 text-xl font-semibold">{mode === "sign-up" ? "Create your account" : "Sign in"}</h1>
+      {mode === "sign-in" && justReset && (
+        <p className="mb-4 rounded-md bg-teal-50 px-3 py-2 text-sm text-teal-800">Password updated. Sign in with your new password.</p>
+      )}
       <form onSubmit={handle} className="space-y-3">
         {mode === "sign-up" && <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required />}
         <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <Input label="Password" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+        {mode === "sign-in" && (
+          <p className="-mt-1 text-right text-sm"><Link href="/forgot-password" className="text-teal-700">Forgot password?</Link></p>
+        )}
         <ErrorText>{error}</ErrorText>
         <Button disabled={busy} className="w-full">{mode === "sign-up" ? "Sign up" : "Sign in"}</Button>
       </form>
